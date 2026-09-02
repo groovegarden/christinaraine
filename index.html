@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,600;0,700;1,500;1,600&family=Source+Sans+3:wght@400;500;600&display=swap');
+:root{
+  --black:#0b0a0d; --bg:#100d13; --bg-2:#171219; --purple:#2a1830; --purple-deep:#1c1120;
+  --raspberry:#b83b62; --raspberry-deep:#7a2440; --raspberry-bright:#d94f74;
+  --cream:#eee7e2; --cream-dim:#c9bfc0; --line:rgba(238,231,226,0.16);
+  --grain-op:0.05;
+}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--black);color:var(--cream);font-family:'Source Sans 3',sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Bitter',serif;margin:0}
+a{color:var(--raspberry-bright)}
+a:hover{color:var(--cream)}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:999;opacity:var(--grain-op);mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+::selection{background:var(--raspberry-deep);color:var(--cream)}
+@media (max-width:1040px){
+  .cover-clusters{grid-template-columns:1fr 1fr !important;gap:40px 48px !important}
+  .cluster-drop{margin-top:0 !important}
+}
+@media (max-width:720px){
+  .hero-name{font-size:15vw !important}
+  .section-pad{padding-left:24px !important;padding-right:24px !important}
+  .cover-clusters{grid-template-columns:1fr !important;gap:36px !important}
+  .cluster-drop{margin-top:0 !important}
+  .covers-photo{position:static !important;width:100% !important;max-width:340px !important;margin:0 auto 28px !important;opacity:0.62 !important}
+  .about-photo-wrap{margin-left:auto !important;margin-right:auto !important}
+  .nav-links{display:none !important}
+  .nav-burger{display:inline-flex !important}
+  .nav-panel{display:flex !important}
+  .photo-grid{grid-template-columns:1fr !important;grid-template-rows:auto !important}
+  .photo-cell{grid-column:1 !important;grid-row:auto !important}
+  .photo-tall{aspect-ratio:4/5 !important}
+  .contact-grid{grid-template-columns:1fr !important;gap:48px !important}
+  .cover-clusters{min-width:0 !important}
+  .cluster-names{white-space:normal !important;font-size:22px !important}
+  .covers-section,#about,#music,#contact{overflow:hidden}
+}
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+
+
+
+<nav style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:20px 28px;background:color-mix(in srgb, var(--raspberry-deep) 55%, var(--purple-deep));pointer-events:auto">
+  <div style="font-family:'Bitter',serif;font-weight:700;letter-spacing:0.02em;font-size:15px;color:var(--cream);pointer-events:auto">CHRISTINA RAINE</div>
+  <div class="nav-links" style="display:flex;align-items:center;gap:26px">
+    <a href="#about" style="pointer-events:auto;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;color:var(--cream);border-bottom:1px solid var(--raspberry-bright);padding-bottom:2px">About</a>
+    <a href="#music" style="pointer-events:auto;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;color:var(--cream);border-bottom:1px solid var(--raspberry-bright);padding-bottom:2px">Listen</a>
+    <a href="#contact" style="pointer-events:auto;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;color:var(--cream);border-bottom:1px solid var(--raspberry-bright);padding-bottom:2px">Contact</a>
+  </div>
+  <button class="nav-burger" type="button" aria-label="Menu" onClick="{{ toggleMenu }}" style="display:none;pointer-events:auto;background:transparent;border:0;padding:6px;color:var(--cream);cursor:pointer;align-items:center;justify-content:center">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+  </button>
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div class="nav-panel" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:60;background:rgba(11,10,13,0.97);pointer-events:auto;flex-direction:column;align-items:flex-end;padding:22px 28px;gap:34px">
+      <button type="button" aria-label="Close menu" onClick="{{ closeMenu }}" style="background:transparent;border:0;padding:6px;color:var(--cream);cursor:pointer">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 5l14 14M19 5L5 19"></path></svg>
+      </button>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:26px;margin-top:20px">
+        <a href="#about" onClick="{{ closeMenu }}" style="font-family:'Bitter',serif;font-style:italic;font-size:30px;text-decoration:none;color:var(--cream)">About</a>
+        <a href="#music" onClick="{{ closeMenu }}" style="font-family:'Bitter',serif;font-style:italic;font-size:30px;text-decoration:none;color:var(--cream)">Listen</a>
+        <a href="#contact" onClick="{{ closeMenu }}" style="font-family:'Bitter',serif;font-style:italic;font-size:30px;text-decoration:none;color:var(--cream)">Contact</a>
+      </div>
+    </div>
+  </sc-if>
+</nav>
+
+<section style="position:relative;min-height:100dvh;overflow:hidden;background:var(--black)">
+  <div style="position:absolute;inset:0">
+    <video src="uploads/christina-raine-hero.mp4" autoplay="{{ true }}" loop="{{ true }}" muted="{{ true }}" playsInline="{{ true }}" style="width:100%;height:100%;object-fit:cover;display:block"></video>
+  </div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(11,10,13,0.92) 0%,rgba(11,10,13,0.35) 42%,rgba(11,10,13,0.05) 65%);pointer-events:none"></div>
+  <div class="section-pad" style="position:absolute;left:0;right:0;bottom:0;padding:0 56px 64px;display:flex;flex-direction:column;align-items:flex-start;gap:18px;max-width:1100px">
+    <h1 class="hero-name" style="font-size:9vw;line-height:0.88;font-weight:700;letter-spacing:-0.01em;color:var(--cream);margin:0;text-shadow:0 2px 24px rgba(0,0,0,0.5)">Christina<br>Raine</h1>
+    <p style="font-family:'Bitter',serif;font-style:italic;font-weight:500;font-size:22px;color:var(--cream-dim);max-width:32ch;margin:0 0 0 4px;line-height:1.35">Twenty years of songs, finally on her own terms.</p>
+    <a href="#music" style="margin-top:14px;display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--cream);border:1px solid var(--cream);padding:12px 26px;font-size:14px;letter-spacing:0.1em;text-transform:uppercase;font-family:'Source Sans 3',sans-serif">
+      Listen to the music
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"></path></svg>
+    </a>
+  </div>
+</section>
+
+<section id="video" class="section-pad" style="position:relative;background:var(--bg);padding:120px 56px;overflow:hidden">
+  <div style="position:absolute;top:-10%;right:-8%;width:420px;height:420px;border-radius:50%;background:var(--raspberry-deep);opacity:0.18;filter:blur(2px)"></div>
+  <div style="position:relative;max-width:1200px;margin:0 auto">
+    <div style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--raspberry-bright);margin-bottom:14px">The video</div>
+    <h2 style="font-size:clamp(28px,5vw,72px);font-style:italic;font-weight:600;color:var(--cream);white-space:nowrap;margin-bottom:44px">Twisted Crazy Beautiful</h2>
+    <div style="position:relative;max-width:920px;margin-left:auto;margin-right:auto;box-shadow:0 30px 80px rgba(0,0,0,0.6)">
+      <div style="position:relative;width:100%;padding-top:56.25%;background:var(--purple-deep);border:1px solid var(--line)">
+        <iframe src="https://www.youtube.com/embed/NigQB0JFSbE?si=b_vwxAQV3W6-kW2-" title="YouTube video player — Twisted Crazy Beautiful" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="{{ true }}" style="position:absolute;inset:0;width:100%;height:100%"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="section-pad" style="background:var(--bg-2);padding:100px 56px">
+  <div style="max-width:1100px;margin:0 auto;display:flex;gap:60px;align-items:flex-start;flex-wrap:wrap">
+    <div style="flex:1 1 420px;max-width:640px">
+      <h2 style="font-size:clamp(30px,4vw,44px);font-weight:600;color:var(--cream);margin-bottom:24px">About</h2>
+      <p style="font-size:19px;line-height:1.65;color:var(--cream-dim);font-family:'Source Sans 3',sans-serif">I've been doing this for twenty years, in one form or another — bars, bands, other people's living rooms. I started writing songs young, mostly to get through losing people, then later to get through loving them. Going solo was the scariest thing I've done in a while, and also the most obvious. I book my own shows, run my own socials, and I'm finally making the record I've wanted to make the whole time.</p>
+    </div>
+    <div class="about-photo-wrap" style="flex:0 1 280px;width:280px;aspect-ratio:4/5;margin-top:8px">
+      <image-slot id="about-photo" shape="rect" placeholder="Portrait — drop in" src="assets/christina-about.jpg"></image-slot>
+    </div>
+  </div>
+</section>
+
+<section id="music" style="position:relative;background:var(--purple-deep);overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(circle at 15% 20%,var(--raspberry-deep) 0%,transparent 55%)"></div>
+  <div class="section-pad" style="position:relative;padding:130px 56px 110px;max-width:1200px;margin:0 auto">
+    <div style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--raspberry-bright);margin-bottom:18px;text-align:left">LISTEN</div>
+    <div style="display:flex;gap:60px;align-items:flex-start;flex-wrap:wrap;margin-bottom:56px">
+      <div style="flex:0 1 440px;width:440px;aspect-ratio:1/1">
+        <image-slot id="ep-photo" shape="rect" placeholder="EP cover art — drop in" src="uploads/twisted-crazy-beautiful-cover.png"></image-slot>
+      </div>
+      <div style="flex:1 1 480px;max-width:640px;margin-left:auto;display:flex;flex-direction:column;gap:22px">
+        <h2 style="font-size:clamp(34px,5.5vw,78px);line-height:1.05;font-weight:700;color:var(--cream);margin:0;text-align:right"><span style="white-space:nowrap">Five new songs.</span><br><span style="font-style:italic;color:var(--raspberry-bright);white-space:nowrap">Coming soon...</span></h2>
+        <p style="font-size:19px;line-height:1.7;color:var(--cream-dim);margin:0;text-align:right">Recorded at Gat 3 Studio, this is the first record made entirely on her own terms. The lead single, "Twisted Crazy Beautiful," came out this spring .</p>
+      </div>
+    </div>
+    <div style="background:rgba(11,10,13,0.55);border:1px solid var(--line);padding:20px">
+      <iframe data-testid="embed-iframe" style="border-radius:12px;border:0" src="https://open.spotify.com/embed/artist/7CvtZSQHsG7xVU4j4KuxNC?utm_source=generator&amp;si=1ae3c1f35efc44b8" width="100%" height="352" frameborder="0" allowfullscreen="{{ true }}" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad covers-section" style="position:relative;overflow:hidden;background:var(--bg);padding:110px 56px">
+  <div style="position:relative;max-width:1200px;margin:0 auto">
+    <div class="covers-photo" style="position:absolute;top:-40px;right:60px;width:min(42vw,520px);aspect-ratio:1/1;pointer-events:none;opacity:0.5;filter:grayscale(0.72) contrast(1.08) brightness(0.62) saturate(0.7);mix-blend-mode:luminosity;mask-image:radial-gradient(ellipse 72% 78% at 62% 45%,rgba(0,0,0,1) 0%,rgba(0,0,0,0.85) 45%,rgba(0,0,0,0) 82%);-webkit-mask-image:radial-gradient(ellipse 72% 78% at 62% 45%,rgba(0,0,0,1) 0%,rgba(0,0,0,0.85) 45%,rgba(0,0,0,0) 82%)">
+      <img src="uploads/FB_IMG_1630271754571-f6fcb65b.JPG" alt="Christina Raine with an acoustic guitar" style="width:100%;height:100%;object-fit:cover;display:block">
+    </div>
+    <h2 style="font-size:clamp(28px,3.5vw,40px);font-weight:600;color:var(--cream);margin-bottom:18px;max-width:16ch;line-height:1.1">Tell me the room, I'll build the set</h2>
+    <p style="color:var(--cream-dim);font-size:17px;line-height:1.65;max-width:52ch;margin-bottom:64px">A slow Tuesday at the bar and a Saturday private party are not the same gig, so I don't play them the same. Quiet night, it's me and one guitar. Room's got energy, I lean into the loud stuff and keep it moving. Here's roughly where I pull from.</p>
+    <div class="cover-clusters" style="display:grid;grid-template-columns:minmax(230px,1.15fr) minmax(215px,0.85fr) minmax(215px,1fr);gap:48px 64px;align-items:start">
+      <div style="border-top:1px solid var(--line);padding-top:18px">
+        <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:var(--raspberry-bright);margin-bottom:18px">smoky and slow</div>
+        <div class="cluster-names" style="font-family:'Bitter',serif;font-style:italic;font-size:26px;line-height:1.45;color:var(--cream);white-space:nowrap">Billie Holiday<br>Amy Winehouse<br>Chris Stapleton</div>
+      </div>
+      <div class="cluster-drop" style="border-top:1px solid var(--line);padding-top:18px;margin-top:64px">
+        <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:var(--raspberry-bright);margin-bottom:18px">guitars up loud</div>
+        <div class="cluster-names" style="font-family:'Bitter',serif;font-style:italic;font-size:26px;line-height:1.45;color:var(--cream);white-space:nowrap">Led Zeppelin<br>Lynyrd Skynyrd<br>Allman Brothers</div>
+      </div>
+      <div class="cluster-drop" style="border-top:1px solid var(--line);padding-top:18px;margin-top:24px">
+        <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:var(--raspberry-bright);margin-bottom:18px">stuff people sing back</div>
+        <div class="cluster-names" style="font-family:'Bitter',serif;font-style:italic;font-size:26px;line-height:1.45;color:var(--cream);white-space:nowrap">Prince<br>Lenny Kravitz<br>John Mayer<br>Miley Cyrus</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" style="background:var(--bg-2);padding:110px 56px">
+  <div style="max-width:1200px;margin:0 auto">
+    <h2 style="font-size:clamp(28px,3.5vw,40px);font-weight:600;color:var(--cream);margin-bottom:48px">Photos</h2>
+    <div class="photo-grid" style="display:grid;grid-template-columns:2fr 1fr;grid-template-rows:repeat(3,auto);gap:16px">
+      <div class="photo-cell photo-tall" style="grid-column:1;grid-row:1 / span 3;aspect-ratio:2/3;overflow:hidden">
+        <image-slot id="photo-1" shape="rect" placeholder="Live shot — drop in" src="assets/photo-guitar-bw.jpg"></image-slot>
+      </div>
+      <div class="photo-cell" style="grid-column:2;grid-row:1;aspect-ratio:1/1;overflow:hidden">
+        <image-slot id="photo-2" shape="rect" placeholder="Studio shot — drop in" src="assets/photo-chair.jpg"></image-slot>
+      </div>
+      <div class="photo-cell" style="grid-column:2;grid-row:2;aspect-ratio:1/1;overflow:hidden">
+        <image-slot id="photo-3" shape="rect" placeholder="Live shot — drop in" src="assets/photo-live-mic.jpg"></image-slot>
+      </div>
+      <div class="photo-cell" style="grid-column:2;grid-row:3;aspect-ratio:1/1;overflow:hidden">
+        <image-slot id="photo-4" shape="rect" placeholder="Candid shot — drop in" src="assets/photo-bw-mic.jpg"></image-slot>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="section-pad" style="background:var(--black);padding:120px 56px 70px">
+  <div class="contact-grid" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:70px">
+    <div>
+      <h2 style="font-size:clamp(34px,5vw,58px);font-weight:700;color:var(--cream);margin-bottom:22px">Let's Make Some&nbsp;<br>Noise Together</h2>
+      <p style="color:var(--cream-dim);font-size:18px;line-height:1.6;max-width:38ch;margin-bottom:32px">Send me your date, your venue, and a little about the vibe. I book everything myself, so you'll actually hear back from me.</p>
+      <a href="mailto:rainemakermusic@gmail.com" style="font-family:'Bitter',serif;font-style:italic;font-size:24px;color:var(--raspberry-bright);text-decoration:none;border-bottom:1px solid var(--raspberry-bright);padding-bottom:3px">rainemakermusic@gmail.com</a>
+      <div style="display:flex;gap:22px;margin-top:44px">
+        <a href="https://instagram.com/rainemakermusic" target="_blank" rel="noopener" aria-label="Instagram" style="color:var(--cream)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg></a>
+        <a href="https://tiktok.com/@christinarainemusic" target="_blank" rel="noopener" aria-label="TikTok" style="color:var(--cream)"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2h2.5a5.5 5.5 0 0 0 5 5v2.6a8 8 0 0 1-5-1.7v6.7a5.9 5.9 0 1 1-5.9-5.9c.3 0 .6 0 .9.1v2.7a3.2 3.2 0 1 0 2.3 3.1V2z"></path></svg></a>
+        <a href="https://www.youtube.com/@christinarainemusic" target="_blank" rel="noopener" aria-label="YouTube" style="color:var(--cream)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14" rx="4"></rect><path d="M10.5 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"></path></svg></a>
+      </div>
+    </div>
+    <div style="background:var(--bg-2);border:1px solid var(--line);padding:36px">
+      <sc-if value="{{ !submitted }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ handleSubmit }}" style="display:flex;flex-direction:column;gap:18px">
+          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+          <div>
+            <label style="display:block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:6px">Name</label>
+            <input name="name" type="text" required="{{ true }}" style="width:100%;background:transparent;border:none;border-bottom:1px solid var(--line);color:var(--cream);font-size:16px;padding:8px 0;font-family:'Source Sans 3',sans-serif">
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:6px">Email</label>
+            <input name="email" type="email" required="{{ true }}" style="width:100%;background:transparent;border:none;border-bottom:1px solid var(--line);color:var(--cream);font-size:16px;padding:8px 0;font-family:'Source Sans 3',sans-serif">
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:6px">Message</label>
+            <textarea name="message" required="{{ true }}" rows="4" style="width:100%;background:transparent;border:none;border-bottom:1px solid var(--line);color:var(--cream);font-size:16px;padding:8px 0;font-family:'Source Sans 3',sans-serif;resize:vertical"></textarea>
+          </div>
+          <sc-if value="{{ error }}" hint-placeholder-val="{{ false }}">
+            <div style="color:var(--raspberry-bright);font-size:13px">{{ error }}</div>
+          </sc-if>
+          <button type="submit" disabled="{{ submitting }}" style="margin-top:10px;align-self:flex-start;background:transparent;border:1px solid var(--cream);color:var(--cream);padding:12px 28px;font-size:14px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:'Source Sans 3',sans-serif">{{ submitLabel }}</button>
+        </form>
+      </sc-if>
+      <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:40px 0;text-align:center">
+          <div style="font-family:'Bitter',serif;font-style:italic;font-size:24px;color:var(--raspberry-bright);margin-bottom:10px">Got it — thank you.</div>
+          <div style="color:var(--cream-dim);font-size:15px">She'll get back to you soon.</div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+  <div style="max-width:1200px;margin:90px auto 0;border-top:1px solid var(--line);padding-top:24px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between">
+    <div style="font-size:13px;color:var(--cream-dim)">© 2026 Christina Raine</div>
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="https://instagram.com/rainemakermusic" target="_blank" rel="noopener" aria-label="Instagram" style="color:var(--cream-dim);display:inline-flex" style-hover="color:var(--raspberry-bright)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg></a>
+      <a href="https://tiktok.com/@christinarainemusic" target="_blank" rel="noopener" aria-label="TikTok" style="color:var(--cream-dim);display:inline-flex" style-hover="color:var(--raspberry-bright)"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2h2.5a5.5 5.5 0 0 0 5 5v2.6a8 8 0 0 1-5-1.7v6.7a5.9 5.9 0 1 1-5.9-5.9c.3 0 .6 0 .9.1v2.7a3.2 3.2 0 1 0 2.3 3.1V2z"></path></svg></a>
+      <a href="https://youtube.com/@christinarainemusic" target="_blank" rel="noopener" aria-label="YouTube" style="color:var(--cream-dim);display:inline-flex" style-hover="color:var(--raspberry-bright)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14" rx="4"></rect><path d="M10.5 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"></path></svg></a>
+    </div>
+  </div>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { submitting: false, submitted: false, error: null, menuOpen: false };
+
+  toggleMenu = () => this.setState(s => ({ menuOpen: !s.menuOpen }));
+  closeMenu = () => this.setState({ menuOpen: false });
+
+  componentDidMount() {
+    const v = document.querySelector('video[src*="christina-raine-hero"]');
+    if (v) { v.muted = true; v.play().catch(() => {}); }
+  }
+
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    this.setState({ submitting: true, error: null });
+    const form = e.target;
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: form.access_key.value,
+          name: form.name.value,
+          email: form.email.value,
+          message: form.message.value,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        this.setState({ submitted: true, submitting: false });
+      } else {
+        this.setState({ submitting: false, error: 'Something went wrong — try again, or just email her directly.' });
+      }
+    } catch (err) {
+      this.setState({ submitting: false, error: 'Something went wrong — try again, or just email her directly.' });
+    }
+  };
+
+  renderVals() {
+    return {
+      menuOpen: this.state.menuOpen,
+      toggleMenu: this.toggleMenu,
+      closeMenu: this.closeMenu,
+      submitting: this.state.submitting,
+      submitted: this.state.submitted,
+      error: this.state.error,
+      submitLabel: this.state.submitting ? 'Sending…' : 'Send',
+      handleSubmit: this.handleSubmit,
+    };
+  }
+}
+</script>
+</body>
+</html>
